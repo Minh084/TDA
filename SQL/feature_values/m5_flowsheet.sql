@@ -1,7 +1,7 @@
 SELECT c.*,
     f.template, f.row_disp_name, f.units, f.recorded_time_utc, f.num_value1, f.num_value2
 FROM 
-    `som-nero-phi-jonc101.triageTD.cohort_enc_code_age` as c -- old: traige_TE.triage_cohort_adjusted
+    `som-nero-phi-jonc101.triageTD.1_2_cohort` as c 
 JOIN 
     `som-nero-phi-jonc101.shc_core.flowsheet` as f
 ON 
@@ -49,14 +49,14 @@ OR
 (row_disp_name="Blood Pressure")
 OR
 (row_disp_name="Oxygen Saturation")
-OR
-(row_disp_name="Glasgow Coma Scale Score")
-OR
-(row_disp_name="Altered Mental Status (GCS<15)")
-OR
-(row_disp_name="Total GCS Points")
-OR
-(row_disp_name="GCS Score")
+-- OR
+-- (row_disp_name="Glasgow Coma Scale Score")
+-- OR
+-- (row_disp_name="Altered Mental Status (GCS<15)")
+-- OR
+-- (row_disp_name="Total GCS Points")
+-- OR
+-- (row_disp_name="GCS Score")
 OR
 (row_disp_name= "Temp 2")
 OR
