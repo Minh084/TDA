@@ -8,75 +8,14 @@ ON
     (c.anon_id=f.anon_id and c.inpatient_data_id_coded=f.inpatient_data_id_coded)
 WHERE
     recorded_time_utc < admit_time --, 'yyyy-mm-dd hh24:mi:ss'
-AND
-(
-(row_disp_name="BP")
-OR
-(row_disp_name="NIBP")
-OR
-(row_disp_name="Resting BP")
-OR
-(row_disp_name="Pulse")
-OR
-(row_disp_name="Heart Rate")
-OR
-(row_disp_name="Resting HR")
-OR
-(row_disp_name="Weight")
-OR
-(row_disp_name="Height")
-OR
-(row_disp_name="Temp")
-OR
-(row_disp_name="Resp")
-OR
-(row_disp_name="Resp Rate")
-OR
-(row_disp_name="Resting RR")
-OR
-(row_disp_name="SpO2")
-OR
-(row_disp_name="Resting SpO2")
-OR
-(row_disp_name="O2 (LPM)")
-OR
-(row_disp_name="Arterial Systolic BP")
-OR
-(row_disp_name="Arterial Diastolic BP")
-OR
-(row_disp_name="Temp (in Celsius)")
-OR
-(row_disp_name="Blood Pressure")
-OR
-(row_disp_name="Oxygen Saturation")
--- OR
--- (row_disp_name="Glasgow Coma Scale Score")
--- OR
--- (row_disp_name="Altered Mental Status (GCS<15)")
--- OR
--- (row_disp_name="Total GCS Points")
--- OR
--- (row_disp_name="GCS Score")
-OR
-(row_disp_name= "Temp 2")
-OR
-(row_disp_name= "Temperature (Blood - PA line)")
-OR
-(row_disp_name= "Respiratory Rate")
-OR
-(row_disp_name= "O2 Flow (L/min)")
-OR
-(row_disp_name= "O2")
-OR
-(row_disp_name= "Activity")
-OR
-(row_disp_name= "Mobility")
-OR
-(row_disp_name= "acuity score")
-OR
-(row_disp_name= "Acuity as Level of Care")
-OR
-(row_disp_name= "LOC")
-OR
-(row_disp_name= "LOC Score")
-)
+AND row_disp_name in 
+('Heart Rate', 'Pulse', "Resting HR", 'Resting Heart Rate (bpm)', 'Resting Pulse Rate: (Record BPM)', -- smaller number, might be too noisy
+ 'O2', 'O2 (LPM)', 'O2 Flow (L/min)', 'O2 Delivery Method', 
+ 'Resp Rate', 'Resp', 'Respiratory Rate', -- "Resting RR" not there
+ 'BP', 'NIBP', 'Arterial Systolic BP' , 'Arterial Diastolic BP' , 'Blood Pressure', "Resting BP", --'Resting Systolic Blood Pressure',
+ 'Temp', 'Temp (in Celsius)', 'Temperature (Blood - PA line)', 'Temp 2', 'Temperature', 
+ 'Activity', 'Mobility', 
+ 'acuity score', 'Acuity as Level of Care',
+ 'LOC', 'LOC Score')
+-- removed GCS, too many missing and not consistent
+--  'SpO2', "Resting SpO2", 'Oxygen Saturation', 'Resting O2 Saturation', -- difficult to interpret without O2 delivery

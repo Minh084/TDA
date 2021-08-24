@@ -3,7 +3,8 @@
 select labs.anon_id, labs.pat_enc_csn_id_coded, order_id_coded, lab_name,
       base_name, ord_num_value, reference_low, reference_high, 
       reference_unit, result_in_range_yn, result_flag, 
-      result_time_utc, order_time_utc , taken_time_utc,
+      result_time_utc, order_time_utc , taken_time_utc
+      
 from `som-nero-phi-jonc101.shc_core.lab_result` as labs
 right join `som-nero-phi-jonc101.triageTD.1_2_cohort` as cohort -- # join labs to cohort
 on labs.pat_enc_csn_id_coded = cohort.pat_enc_csn_id_coded
@@ -13,12 +14,30 @@ and extract(year from admit_time) > 2014 -- # only CSNs after 2014
 and -- the following lab_names and base_names
 (
     lab_name in 
-        ("Glucose, Non-fasting", "Glucose", "Base Excess Arterial for POC", "Bicarbonate, Art for POC", "Hct (Est)", "HCT, POC", "Hematocrit (Manual Entry) See EMR for details", "Hgb, calculated, POC", "HgB", "Potassium, whole blood, ePOC", "Potassium", "Lactic Acid", "Oxygen Saturation for POC", "Arterial pCO2 for POC", "pH by Meter", "Arterial pH for POC", "Platelets", "Arterial pO2 for POC", "Total Bilirubin", "TCO2, (ISTAT)", "CO2 Arterial Total for POC", "Troponin I, POCT", "WBC count", 
-        "Glucose by Meter", "Sodium, Ser/Plas", "Potassium, Ser/Plas", "Calcium, Ser/Plas", "Creatinine, Ser/Plas", "Chloride, Ser/Plas", "CO2, Ser/Plas", "Anion Gap", "Glucose, Ser/Plas", "BUN, Ser/Plas", "Platelet count", "Hematocrit", "Hemoglobin", "WBC", "RBC", "MCV", "MCHC", "MCH", "RDW", "Magnesium, Ser/Plas", "Albumin, Ser/Plas", "Protein, Total, Ser/Plas", "AST (SGOT), Ser/Plas", "ALT (SGPT), Ser/Plas", "Alk P'TASE, Total, Ser/Plas", "Total Bilirubin, Ser/Plas", "Neutrophil, Absolute", "Basophil %", "Eosinophil %", "Neutrophil %", "Monocyte %", "Lymphocyte %", "Monocyte, Absolute", "Lymphocyte, Absolute", "Basophil, Absolute", "Eosinophil, Absolute", "Globulin", "INR", "Prothrombin Time", "Phosphorus, Ser/Plas", "Base Excess, ISTAT", "Lactate, Whole Bld", "TCO2 (a), ISTAT", "pCO2 (a), ISTAT", "PH (a), ISTAT", "PO2 (a), ISTAT", "HCO3 (a), ISTAT", "O2 Saturation, ISTAT", "tCO2", "HCO3", "WBC, urine", "RBC, urine", "TROPONIN I", "Base Excess (vt)", "pH, urine", "Leukocyte Esterase, urine", "pH", "Lactate, ISTAT", "HCO3 (v), ISTAT", "PCO2 (v), ISTAT", "PH (v), ISTAT", "TCO2 (v), ISTAT", "PO2 (v), ISTAT", "O2 Saturation, ISTAT (Ven)", "pCO2 (v)", "pO2 (v)", "pH (v)", "O2 Saturation (v)", "Fibrinogen", "LDH, Total, Ser/Plas", "pCO2 (a)", "pO2 (a)", "pH (a)", "O2 Saturation (a)", "ctO2 (a)", "Hemoglobin A1c", "D-Dimer", "Tacrolimus (FK506)", "Thrombin Time", "Urea Nitrogen,Ser/Plas", "Triglyceride, Ser/Plas", "Potassium, ISTAT", "Hgb(Calc), ISTAT", "Sodium, ISTAT", "Calcium,Ion, ISTAT", "Hct, ISTAT", "Glucose,ISTAT", "Creatinine,ISTAT", "Chloride, ISTAT", "BUN, ISTAT", "Anion Gap, ISTAT", "TCO2, ISTAT", "INR, ISTAT", "PT, ISTAT", "Hct(Calc), ISTAT", "PH, ISTAT", "PCO2, ISTAT", "HCO3, ISTAT", "PO2, ISTAT", "O2 Saturation, ISTAT (Oth)", "Nitrite, urine", "Ketone, urine", "Protein, urine", "Clarity, urine", "Glucose, urine", "Blood, urine", "Glucose, Whole Blood", "Potassium, Whole Bld", "Chloride, Whole Bld", "Sodium, Whole Blood", "NEUT, %", "LYM, %", "MONO, %", "BASO, %", "BASOS, ABS", "EOS, ABS", "EOS, %", "LYM, ABS", "MONO, ABS", "NEUT, ABS", "Basophils")
+        (
+--             "Glucose, Non-fasting", "Glucose", "Base Excess Arterial for POC", "Bicarbonate, Art for POC", "Hct (Est)", "HCT, POC", "Hematocrit (Manual Entry) See EMR for details", "Hgb, calculated, POC", "HgB", "Potassium, whole blood, ePOC", "Potassium", "Lactic Acid", "Oxygen Saturation for POC", "Arterial pCO2 for POC", "pH by Meter", "Arterial pH for POC", "Platelets", "Arterial pO2 for POC", "Total Bilirubin", "TCO2, (ISTAT)", "CO2 Arterial Total for POC", "Troponin I, POCT", "WBC count", -- additional lab_names, included in base_name (checked)
+        "Glucose by Meter", "Sodium, Ser/Plas", "Potassium, Ser/Plas", "Calcium, Ser/Plas", "Creatinine, Ser/Plas", "Chloride, Ser/Plas", "CO2, Ser/Plas", "Anion Gap", "Glucose, Ser/Plas", "BUN, Ser/Plas", "Platelet count", "Hematocrit", "Hemoglobin", "WBC", "RBC", "MCV", "MCHC", "MCH", "RDW", "Magnesium, Ser/Plas", "Albumin, Ser/Plas", "Protein, Total, Ser/Plas", "AST (SGOT), Ser/Plas", "ALT (SGPT), Ser/Plas", "Alk P'TASE, Total, Ser/Plas", "Total Bilirubin, Ser/Plas", "Neutrophil, Absolute", "Basophil %", "Eosinophil %", "Neutrophil %", "Monocyte %", "Lymphocyte %", "Monocyte, Absolute", "Lymphocyte, Absolute", "Basophil, Absolute", "Eosinophil, Absolute", "Globulin", "INR", "Prothrombin Time", "Phosphorus, Ser/Plas", "Base Excess, ISTAT", "Lactate, Whole Bld", "TCO2 (a), ISTAT", "pCO2 (a), ISTAT", "PH (a), ISTAT", "PO2 (a), ISTAT", "HCO3 (a), ISTAT", "O2 Saturation, ISTAT", "tCO2", "HCO3", "WBC, urine", "RBC, urine", "TROPONIN I", "Base Excess (vt)", "pH, urine", "Leukocyte Esterase, urine", "pH", "Lactate, ISTAT", "HCO3 (v), ISTAT", "PCO2 (v), ISTAT", "PH (v), ISTAT", "TCO2 (v), ISTAT", "PO2 (v), ISTAT", "O2 Saturation, ISTAT (Ven)", "pCO2 (v)", "pO2 (v)", "pH (v)", "O2 Saturation (v)", "Fibrinogen", "LDH, Total, Ser/Plas", "pCO2 (a)", "pO2 (a)", "pH (a)", "O2 Saturation (a)", "ctO2 (a)", "Hemoglobin A1c", "D-Dimer", "Tacrolimus (FK506)", "Thrombin Time", "Urea Nitrogen,Ser/Plas", "Triglyceride, Ser/Plas", "Potassium, ISTAT", "Hgb(Calc), ISTAT", "Sodium, ISTAT", "Calcium,Ion, ISTAT", "Hct, ISTAT", "Glucose,ISTAT", "Creatinine,ISTAT", "Chloride, ISTAT", "BUN, ISTAT", "Anion Gap, ISTAT", "TCO2, ISTAT", "INR, ISTAT", "PT, ISTAT", "Hct(Calc), ISTAT", "PH, ISTAT", "PCO2, ISTAT", "HCO3, ISTAT", "PO2, ISTAT", "O2 Saturation, ISTAT (Oth)", "Nitrite, urine", "Ketone, urine", "Protein, urine", "Clarity, urine", "Glucose, urine", "Blood, urine", "Glucose, Whole Blood", "Potassium, Whole Bld", "Chloride, Whole Bld", "Sodium, Whole Blood", "NEUT, %", "LYM, %", "MONO, %", "BASO, %", "BASOS, ABS", "EOS, ABS", "EOS, %", "LYM, ABS", "MONO, ABS", "NEUT, ABS", "Basophils") -- 
 
-        or base_name in ('AG', 'AGAP', 'ALB', 'ALT', 'AST', 'ALKP', 'BASO', 'BE', 'BUN', 'CA', 'CAION',  'CL','CO2','CR', 'EOS', 'GLOB', 'GLU', 'GLUURN', 'HCO3A', 'HCO3V', 'HCT', 'HGB', 'INR', 'K', 'LAC', 'LACWBL', 'LYM', 'MG', 'MONO', 'NEUT', 'O2SATA', 'O2SATV', 'PCAGP', 'PCBUN', 'PCCL', 'PCO2A', 'PCO2V', 'PH', 'PHA', 'PHCAI', 'PHV', 'PLT', 'PO2A', 'PO2V', 'PT', 'RBC', 'TBIL', 'TCO2A', 'TCO2V', 'TNI', 'TP', 'WBC', 'XLEUKEST', 'XUKET', 'NA')
-)
- 
+        or base_name in ('AG', 'AGAP', 'ALB', 'ALT', 'AST', 'ALKP', 'BASOAB', 'BE', 'BUN', 'CA', 'CAION',  'CL','CO2','CR', 'EOSAB', 'GLOB', 'GLU', 'GLUURN', 'HCO3A', 'HCO3V', 'HCT', 'HGB', 'INR', 'K', 'LAC', 'LACWBL', 'LYMAB', 'MG', 'MONOAB', 'NA', 'NEUTAB', 'O2SATA', 'O2SATV', 'PCAGP', 'PCBUN', 'PCCL', 'PCO2A', 'PCO2V', 'PH', 'PHA', 'PHCAI', 'PHV', 'PLT', 'PO2A', 'PO2V', 'PT', 'RBC', 'TBIL', 'TCO2A', 'TCO2V', 'TNI', 'TP', 'WBC', 'XLEUKEST', 'XUKET', 'UGLU')
+) 
+-- 'CTO2A','FIBRINOGEN''FK506''HCO3''PCAGP''PCBUN''PCCL''PCO2SO''PHOS''TGL''TT''UPH'
+
+-- PCCOM	40775
+-- EGFR	40051 (take this?)
+-- TP	37545
+-- HEARTRATE	31484
+-- GFR	30132
+-- FASTING	30011
+-- UCMT	14265
+-- XPTT	13886
+-- XSPG	13683
+-- NRBCABSOLUTE	11029
+-- NRBCPERCENT	11029
+-- IGABSWAM	10465
+-- IGWAM	10465
+
+-- white count, only use absolute counts, no % = no 'BASO', 'EOS', 'LYM', 'MONO', 'NEUT', 
+
 -- or (
 -- (lab_name="Glucose by Meter")
 -- OR
