@@ -1,6 +1,6 @@
-SELECT labs.anon_id, labs.pat_enc_csn_id_coded, order_id_coded, lab_name,
-        base_name, ord_num_value, reference_low, reference_high, 
-        reference_unit, result_in_range_yn, result_flag, 
+SELECT cohort.*,
+        order_id_coded, lab_name, base_name, ord_value, ord_num_value, 
+        reference_low, reference_high, reference_unit, result_in_range_yn, result_flag, 
         result_time_utc, order_time_utc , taken_time_utc
       
 FROM `som-nero-phi-jonc101.shc_core.lab_result` as labs
@@ -16,4 +16,4 @@ AND base_name in
  'HCT', 'HGB', 'INR', 'K', 'LAC', 'LACWBL', 'LYMAB', 'MONOAB', 'NEUTAB', 'NEUTABS', 'O2SATA', 
  'O2SATV', 'PCAGP', 'PCBUN', 'PCCL', 'PCO2A', 'PCO2V', 'PH', 'PHA', 'PHV', 'PLT', 'PO2A', 'PO2V',
  'PT', 'TBIL', 'TCO2A', 'TNI', 'WBC', 'NA', 'ALB', 'ALKP', 'ALT', 'AST', 'BE', 'CA', 'CO2', 
- 'GLOB', 'GLUURN', 'MCH', 'RDW', 'TP')
+ 'GLOB', 'MCH', 'RDW', 'TP') -- 'GLUURN' removed, all NA

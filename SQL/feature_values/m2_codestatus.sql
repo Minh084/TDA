@@ -1,4 +1,4 @@
-SELECT c.anon_id, c.pat_enc_csn_id_coded, c.admit_time_jittered,
+SELECT c.*,
     o.order_type, o.order_status, o.display_name, o.description, 
     o.order_time_jittered_utc
 FROM 
