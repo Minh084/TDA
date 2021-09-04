@@ -1,7 +1,7 @@
 # Sequence of codes assigned to patients 
 
 WITH sequence as (
-# Get (lab, procedure, imaging and microbiology orders from order_proc) from last year
+-- # Get (lab, procedure, imaging and microbiology orders from order_proc) within one year prior to current admission time
 SELECT DISTINCT lab.order_proc_id_coded as order_id,
                 lab.order_type as feature_type,
                 lab.description as features,
@@ -20,7 +20,7 @@ AND lab.order_time_jittered_utc < cohort.admit_time
 AND lab.pat_enc_csn_id_coded = cohort.pat_enc_csn_id_coded)
 UNION DISTINCT
 
-# Get icd10 codes from full timeline
+-- # Get icd10 codes from full timeline, from all previous admissions
 SELECT DISTINCT pat_enc_csn_id_coded as order_id, -- fill in because dx table doesn't have order_id
                 'Diagnosis' as feature_type, dx.icd10 as features,
                 cohort.anon_id, cohort.pat_enc_csn_id_coded, cohort.admit_time, 
@@ -33,7 +33,7 @@ AND dx.start_date_utc < cohort.admit_time
 AND dx.icd10 is not NULL
 UNION DISTINCT
 
-# Get med orders from order_med from last year
+-- # Get med orders from order_med from within one year prior to current admission time
 SELECT DISTINCT med.order_med_id_coded order_id,
                 'Meds' as feature_type, med.med_description as features,
                 cohort.anon_id, cohort.pat_enc_csn_id_coded, cohort.admit_time, 
@@ -45,7 +45,7 @@ WHERE med.order_start_time_utc < cohort.admit_time
 AND timestamp_add(med.order_start_time_utc, INTERVAL 24*365 HOUR) >= cohort.admit_time
 AND med.order_start_time_utc IS NOT NULL) -- maybe redundent but fine
 
-# Group by feature and encounter, and count # distinct orders/assignemnts of the feature
+-- # Group by feature and encounter, and count # distinct orders/assignemnts of the feature
 SELECT anon_id, pat_enc_csn_id_coded, admit_time, feature_type, features, COUNT (DISTINCT order_id) as values
 FROM sequence
 GROUP BY anon_id, pat_enc_csn_id_coded, admit_time, feature_type, features
