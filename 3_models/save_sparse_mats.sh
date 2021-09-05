@@ -2,22 +2,22 @@
 # NOTE the -l flag!
 #
 #SBATCH -J get_sparse
-#SBATCH -o /home/ccorbin/logs/get_sparse."%j".out
+#SBATCH -o /home/jupyter/ThickDesc/OutputTD/3_models/logs/get_sparse."%j".out
 
 # Request 24 hour run time
 #SBATCH -t 24:0:0
 #SBATCH --mem=32gb
 #SBATCH -p normal
 
-source /share/sw/open/anaconda/3/bin/activate
 which python
-# source activate /home/ccorbin/envs/custom
 
-Features=(Diagnosis Meds lab_orders lab_results vitals Imaging Procedures demo)
+Features=(vitals)
 feature=${Features[${SLURM_ARRAY_TASK_ID}-1]}
 
-out_path=/share/pi/jonc101/triage/results/ablation_experiments
 
-mkdir -p ${dirO}
+dirO=/home/jupyter/ThickDesc/OutputTD/3_models/ablation
+# dirO=/home/jupyter/ThickDesc/OutputTD/3_models/ablation/$features -- will give vitals/vitals
 
-python /home/ccorbin/BMI212/notebooks/save_sparse_mats.py --output_path $out_path --ablated_feature_type $feature
+mkdir -p $dirO
+
+python /home/jupyter/ThickDesc/TriageTD/3_models/save_sparse_mats.py --output_path $dirO --ablated_feature_type $feature

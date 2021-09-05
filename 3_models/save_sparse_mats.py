@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 import os, argparse
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/home/ccorbin/.config/gcloud/application_default_credentials.json' 
-os.environ['GCLOUD_PROJECT'] = 'mining-clinical-decisions' 
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/home/jupyter/.config/gcloud/application_default_credentials.json'
+os.environ['GCLOUD_PROJECT'] = 'som-nero-phi-jonc101' 
 
 from google.cloud import bigquery
 client=bigquery.Client()
@@ -23,7 +23,12 @@ def main():
     out_path = os.path.join(base_path, args.ablated_feature_type)
     os.makedirs(out_path, exist_ok=True)
     
-    q_cohort = """select * from traige_TE.triage_cohort_final_with_labels_complete1vs"""
+#     q_cohort = """select * from triageTD.1_5_cohort_final"""
+    q_cohort = """
+    SELECT anon_id, pat_enc_csn_id_coded, admit_time, 
+           first_label, death_24hr_recent_label 
+    FROM triageTD.1_5_cohort_final
+    """
     query_job = client.query(q_cohort)
     df_cohort = query_job.result().to_dataframe()
     df_cohort = df_cohort.sort_values('pat_enc_csn_id_coded')
@@ -33,19 +38,23 @@ def main():
     validation_labels = df_cohort[df_cohort['admit_time'].dt.year == 2018]
 
     train_and_val_labels = df_cohort[df_cohort['admit_time'].dt.year < 2019]
-    test_labels = df_cohort[df_cohort['admit_time'].dt.year == 2019]
-
+#     test_labels = df_cohort[df_cohort['admit_time'].dt.year == 2019] # old data
+    test_labels = df_cohort[df_cohort['admit_time'].dt.year > 2018] # new data has 2020
+    
     train_labels.to_csv(os.path.join(out_path, 'training_labels.csv'), index=None)
     validation_labels.to_csv(os.path.join(out_path, 'validation_labels.csv'), index=None)
     train_and_val_labels.to_csv(os.path.join(out_path, 'train_and_val_labels.csv'), index=None)
     test_labels.to_csv(os.path.join(out_path, 'test_labels.csv'), index=None)
     
-    q_features = """
-    SELECT f.*, EXTRACT(YEAR from f.admit_time) year
-    FROM traige_TE.triage_features_counts_long f
-    RIGHT JOIN traige_TE.triage_cohort_final_with_labels_complete1vs l
-    USING (pat_enc_csn_id_coded)
-    """
+#     q_features = """
+#     SELECT f.*, EXTRACT(YEAR from f.admit_time) year
+#     FROM triageTD.2_9_features_all_long f
+#     RIGHT JOIN triageTD.1_5_cohort_final c
+#     USING (pat_enc_csn_id_coded)
+#     """
+    
+    q_features = """SELECT * FROM triageTD.2_9_features_all_long"""
+    
     query_job = client.query(q_features)
     df_features = query_job.result().to_dataframe()
     
@@ -62,36 +71,42 @@ def main():
         df_features = df_features[~df_features['feature_type'].isin([args.ablated_feature_type])]
     
     # Remove appropriate binned features to create matrices for validation and test
-    df_features_val = df_features[~df_features['feature_type'].isin(['labs_results_test', 'vitals_test'])]
-    df_features_test = df_features[~df_features['feature_type'].isin(['labs_results_train', 'vitals_train'])]
+#     df_features_val = df_features[~df_features['feature_type'].isin(['labs_results_test', 'vitals_test'])]
+#     df_features_test = df_features[~df_features['feature_type'].isin(['labs_results_train', 'vitals_train'])]
     
-    training_examples = df_features_val[df_features_val['year'] < 2018]
-    validation_examples = df_features_val[df_features_val['year'] == 2018]
+#     training_examples = df_features_val[df_features_val['year'] < 2018]
+#     validation_examples = df_features_val[df_features_val['year'] == 2018]
+
+#     training_examples = df_features[df_features_val['year'] < 2018]
+#     validation_examples = df_features[df_features_val['year'] == 2018]
     
-    training_and_val_examples = df_features_test[df_features_test['year'] < 2019]
-    test_examples = df_features_test[df_features_test['year'] == 2019]
+    training_examples = df_features[df_features['year'] < 2018]
+    validation_examples = df_features[df_features['year'] == 2018]
+    
+#     training_and_val_examples = df_features_test[df_features_test['year'] < 2019]
+#     test_examples = df_features_test[df_features_test['year'] == 2019]
     
     # Create sparse matrix representations
     train_csr, train_csns, train_vocab = create_sparse_feature_matrix(training_examples, training_examples)
     validation_csr, val_csns, val_vocab = create_sparse_feature_matrix(training_examples, validation_examples)
 
-    train_and_val_csr, train_and_val_csns, train_and_val_vocab = create_sparse_feature_matrix(training_and_val_examples, training_and_val_examples)
-    test_csr, test_csns, test_and_val_vocab = create_sparse_feature_matrix(training_and_val_examples, test_examples)
+#     train_and_val_csr, train_and_val_csns, train_and_val_vocab = create_sparse_feature_matrix(training_and_val_examples, training_and_val_examples)
+#     test_csr, test_csns, test_and_val_vocab = create_sparse_feature_matrix(training_and_val_examples, test_examples)
     
     # Sanity checks
     for a, b in zip(train_labels['pat_enc_csn_id_coded'].values, train_csns):
         assert a == b
     for a, b in zip(validation_labels['pat_enc_csn_id_coded'].values, val_csns):
         assert a == b
-    for a, b in zip(train_and_val_labels['pat_enc_csn_id_coded'].values, train_and_val_csns):
-        assert a == b
-    for a, b in zip(test_labels['pat_enc_csn_id_coded'].values, test_csns):
-        assert a == b
+#     for a, b in zip(train_and_val_labels['pat_enc_csn_id_coded'].values, train_and_val_csns):
+#         assert a == b
+#     for a, b in zip(test_labels['pat_enc_csn_id_coded'].values, test_csns):
+#         assert a == b
     
     save_npz(os.path.join(out_path, 'training_examples.npz'), train_csr)
     save_npz(os.path.join(out_path, 'validation_examples.npz'), validation_csr)
-    save_npz(os.path.join(out_path, 'training_and_val_examples.npz'), train_and_val_csr)
-    save_npz(os.path.join(out_path, 'test_examples.npz'), test_csr)
+#     save_npz(os.path.join(out_path, 'training_and_val_examples.npz'), train_and_val_csr)
+#     save_npz(os.path.join(out_path, 'test_examples.npz'), test_csr)
 
 def build_vocab(data):
     """Builds vocabulary for of terms from the data. Assigns each unique term to a monotonically increasing integer."""
