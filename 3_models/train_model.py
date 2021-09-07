@@ -109,8 +109,6 @@ def ridge(X_train, y_train, X_valid, y_valid):
     ridge_opt = cv_history[max(cv_history.keys())]
     y_opt_predict = ridge_opt.predict_proba(X_valid)[:,1]
 
-
-    
     return y_opt_predict, roc_auc_score(y_valid, y_opt_predict), ridge_opt
 
 
@@ -377,7 +375,7 @@ def main():
     parser.add_argument('--model_class', default=None, type=str, help='ridge/lasso/lightgbm/random_forest/ffnn')
     #   parser.add_argument('--feature_types', default='all', type=str, help='Types of features used in model. Options: all,Diagnosis,Imaging,Lab,Meds,Procedures,demo,labs_results_train, vitals_train')
     parser.add_argument('--data_dir', default="", type=str, help='directory with sparce matrices train val test')
-    parser.add_argument('--label', default="label_max24", type=str, help='the column name for label in triageTD.1_5_cohort_final')
+    parser.add_argument('--label', default="first_label", type=str, help='the column name for label in triageTD.1_5_cohort_final')
     parser.add_argument('--output_dir', default="", type=str, help='directory to save outputs')
     parser.add_argument('--val', default=True, type=str2bool, help='True if performing validation (i.e. not using test data)')
     parser.add_argument('--model_file', default = "", type=str, help = "JSON file of validated model hyperparameters")
