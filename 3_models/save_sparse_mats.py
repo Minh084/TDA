@@ -53,8 +53,9 @@ def main():
 #     USING (pat_enc_csn_id_coded)
 #     """
     
-    q_features = """SELECT * FROM triageTD.2_9_features_all_long"""
-    
+#     q_features = """SELECT * FROM triageTD.2_9_features_all_long""" # this one only has trainbin for vitals and labs
+
+    q_features = """SELECT * FROM triageTD.2_9_features_all_long""" # this one has both trainbin and testbin for vitals and labs
     query_job = client.query(q_features)
     df_features = query_job.result().to_dataframe()
     
@@ -66,47 +67,48 @@ def main():
     elif args.ablated_feature_type == "vitals":
         df_features = df_features[~df_features['feature_type'].isin(['vitals_test', 'vitals_train'])]
     elif args.ablated_feature_type == 'lab_orders':
-        df_features = df_features[~df_features['feature_type'].isin(['Lab', 'Microbiology Culture', 'Microbiology'])]
+        df_features = df_features[~df_features['feature_type'].isin(['Lab', 'Microbiology'])]
     else:
         df_features = df_features[~df_features['feature_type'].isin([args.ablated_feature_type])]
     
     # Remove appropriate binned features to create matrices for validation and test
-#     df_features_val = df_features[~df_features['feature_type'].isin(['labs_results_test', 'vitals_test'])]
-#     df_features_test = df_features[~df_features['feature_type'].isin(['labs_results_train', 'vitals_train'])]
+    df_features_val = df_features[~df_features['feature_type'].isin(['labs_results_test', 'vitals_test'])]
+    df_features_test = df_features[~df_features['feature_type'].isin(['labs_results_train', 'vitals_train'])]
     
-#     training_examples = df_features_val[df_features_val['year'] < 2018]
-#     validation_examples = df_features_val[df_features_val['year'] == 2018]
+    training_examples = df_features_val[df_features_val['year'] < 2018]
+    validation_examples = df_features_val[df_features_val['year'] == 2018]
 
-#     training_examples = df_features[df_features_val['year'] < 2018]
-#     validation_examples = df_features[df_features_val['year'] == 2018]
+    training_examples = df_features[df_features_val['year'] < 2018]
+    validation_examples = df_features[df_features_val['year'] == 2018]
     
     training_examples = df_features[df_features['year'] < 2018]
     validation_examples = df_features[df_features['year'] == 2018]
     
-#     training_and_val_examples = df_features_test[df_features_test['year'] < 2019]
-#     test_examples = df_features_test[df_features_test['year'] == 2019]
+    training_and_val_examples = df_features_test[df_features_test['year'] < 2019]
+    test_examples = df_features_test[df_features_test['year'] >= 2019]
+
     
     # Create sparse matrix representations
     train_csr, train_csns, train_vocab = create_sparse_feature_matrix(training_examples, training_examples)
     validation_csr, val_csns, val_vocab = create_sparse_feature_matrix(training_examples, validation_examples)
 
-#     train_and_val_csr, train_and_val_csns, train_and_val_vocab = create_sparse_feature_matrix(training_and_val_examples, training_and_val_examples)
-#     test_csr, test_csns, test_and_val_vocab = create_sparse_feature_matrix(training_and_val_examples, test_examples)
+    train_and_val_csr, train_and_val_csns, train_and_val_vocab = create_sparse_feature_matrix(training_and_val_examples, training_and_val_examples)
+    test_csr, test_csns, test_and_val_vocab = create_sparse_feature_matrix(training_and_val_examples, test_examples)
     
     # Sanity checks
     for a, b in zip(train_labels['pat_enc_csn_id_coded'].values, train_csns):
         assert a == b
     for a, b in zip(validation_labels['pat_enc_csn_id_coded'].values, val_csns):
         assert a == b
-#     for a, b in zip(train_and_val_labels['pat_enc_csn_id_coded'].values, train_and_val_csns):
-#         assert a == b
-#     for a, b in zip(test_labels['pat_enc_csn_id_coded'].values, test_csns):
-#         assert a == b
+    for a, b in zip(train_and_val_labels['pat_enc_csn_id_coded'].values, train_and_val_csns):
+        assert a == b
+    for a, b in zip(test_labels['pat_enc_csn_id_coded'].values, test_csns):
+        assert a == b
     
     save_npz(os.path.join(out_path, 'training_examples.npz'), train_csr)
     save_npz(os.path.join(out_path, 'validation_examples.npz'), validation_csr)
-#     save_npz(os.path.join(out_path, 'training_and_val_examples.npz'), train_and_val_csr)
-#     save_npz(os.path.join(out_path, 'test_examples.npz'), test_csr)
+    save_npz(os.path.join(out_path, 'training_and_val_examples.npz'), train_and_val_csr)
+    save_npz(os.path.join(out_path, 'test_examples.npz'), test_csr)
 
 def build_vocab(data):
     """Builds vocabulary for of terms from the data. Assigns each unique term to a monotonically increasing integer."""

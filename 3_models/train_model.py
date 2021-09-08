@@ -187,27 +187,6 @@ def random_forest(X_train, y_train, X_valid, y_valid):
     return y_opt_predict, roc_auc_score(y_valid, y_opt_predict), rf_opt
 
 
-def lightgbm(X_train, y_train, X_valid, y_valid): 
-
-    cv_history = {}
-
-    for lr in [0.01, 0.05, 0.1, 0.5]:
-        for num_leaves in [10,25,100]:
-
-            gbm = lgb.LGBMClassifier(objective='binary', n_estimators=1000, learning_rate=lr, num_leaves=num_leaves)
-
-            #For some reason gbm doesn't like pandas dfs... have to use X_train.values - chaning bc we are inputing a sparse matrix
-            gbm.fit(X_train, y_train, eval_set= [(X_valid, y_valid)], eval_metric = 'binary', early_stopping_rounds = 10, verbose=True)
-
-            y_predict = gbm.predict_proba(X_valid)[:,1]
-            cv_roc = roc_auc_score(y_valid, y_predict)
-            print("AUC w/ ", lr, "learning rate and ", num_leaves, "num_leaves is ", cv_roc)
-            cv_history[cv_roc] = gbm
-            
-    gbm_opt = cv_history[max(cv_history.keys())]
-    y_opt_predict = gbm_opt.predict_proba(X_valid)[:,1]
-            
-    return y_opt_predict, roc_auc_score(y_valid, y_opt_predict), gbm_opt
 
 def ffnn(X_train, y_train, X_valid, y_valid):
 
@@ -281,6 +260,30 @@ def ffnn(X_train, y_train, X_valid, y_valid):
     y_opt_predict = nn_opt.predict(X_valid)
 
     return y_opt_predict, roc_auc_score(y_valid, y_opt_predict), nn_opt
+
+
+def lightgbm(X_train, y_train, X_valid, y_valid): 
+
+    cv_history = {}
+
+    for lr in [0.01, 0.02, 0.03, 0.05, 0.1]: # 0.3 or 0.5 don't do well
+        for num_leaves in [10, 25, 50, 75, 100]:
+
+            gbm = lgb.LGBMClassifier(objective='binary', n_estimators=1000, learning_rate=lr, num_leaves=num_leaves)
+
+            #For some reason gbm doesn't like pandas dfs... have to use X_train.values - chaning bc we are inputing a sparse matrix
+            gbm.fit(X_train, y_train, eval_set= [(X_valid, y_valid)], eval_metric = 'binary', early_stopping_rounds = 10, verbose=False) # True too long too much
+
+            y_predict = gbm.predict_proba(X_valid)[:,1]
+            cv_roc = roc_auc_score(y_valid, y_predict)
+            print("AUC w/ ", lr, "learning rate and ", num_leaves, "num_leaves is ", cv_roc)
+            cv_history[cv_roc] = gbm
+            
+    gbm_opt = cv_history[max(cv_history.keys())]
+    y_opt_predict = gbm_opt.predict_proba(X_valid)[:,1]
+            
+    return y_opt_predict, roc_auc_score(y_valid, y_opt_predict), gbm_opt
+
 
 def write_params_to_json(clf, output_path, model, TAB):
 

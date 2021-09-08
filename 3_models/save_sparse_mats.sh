@@ -11,13 +11,14 @@
 
 which python
 
-Features=(vitals)
-feature=${Features[${SLURM_ARRAY_TASK_ID}-1]}
+Features=(none) # vitals cannot do more than 1, otherwise, it only take the last one: (none  vitals) --> only vitals got done
+feature=${Features[${SLURM_ARRAY_TASK_ID}-1]} # only for slurm job queue
 
+echo $feature
 
-dirO=/home/jupyter/ThickDesc/OutputTD/3_models/ablation
+out_path=/home/jupyter/ThickDesc/OutputTD/3_models/ablation
 # dirO=/home/jupyter/ThickDesc/OutputTD/3_models/ablation/$features -- will give vitals/vitals
 
-mkdir -p $dirO
+mkdir -p $out_path
 
-python /home/jupyter/ThickDesc/TriageTD/3_models/save_sparse_mats.py --output_path $dirO --ablated_feature_type $feature
+python /home/jupyter/ThickDesc/TriageTD/3_models/save_sparse_mats.py --output_path $out_path --ablated_feature_type $feature
