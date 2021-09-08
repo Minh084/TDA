@@ -32,6 +32,7 @@ def main():
     query_job = client.query(q_cohort)
     df_cohort = query_job.result().to_dataframe()
     df_cohort = df_cohort.sort_values('pat_enc_csn_id_coded')
+    print(len(df_cohort.pat_enc_csn_id_coded.unique()))
     
     ### Save labels to file
     train_labels = df_cohort[df_cohort['admit_time'].dt.year < 2018]
@@ -53,13 +54,23 @@ def main():
 #     USING (pat_enc_csn_id_coded)
 #     """
     
-#     q_features = """SELECT * FROM triageTD.2_9_features_all_long""" # this one only has trainbin for vitals and labs
-
-    q_features = """SELECT * FROM triageTD.2_9_features_all_long""" # this one has both trainbin and testbin for vitals and labs
+    q_features = """SELECT * FROM triageTD.2_9_features_all_long""" # this one only has trainbin for vitals and labs
+#     q_features = """SELECT * FROM triageTD.2_9_features_all_long_year""" # this breaks the index alignment
+#     q_features = """
+#     SELECT f.* FROM triageTD.2_9_coh4_features_all_long_year f
+#     RIGHT JOIN triageTD.1_4_cohort c
+#     USING (pat_enc_csn_id_coded)
+#     """ # this one has both trainbin and testbin for vitals and labs
     query_job = client.query(q_features)
     df_features = query_job.result().to_dataframe()
+    print(len(df_features.pat_enc_csn_id_coded.unique()))
     
     df_features = df_features.sort_values('pat_enc_csn_id_coded')
+    
+#     if df_cohort['pat_enc_csn_id_coded'] == df_features['pat_enc_csn_id_coded']:
+#         print ("The lists are identical")
+#     else:
+#         print ("The lists are not identical")
         
     # Remove ablated feature type from long form table
     if args.ablated_feature_type == "lab_results":
