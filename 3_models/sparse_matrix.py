@@ -31,7 +31,7 @@ def main():
         q_features = """SELECT * FROM triageTD.2_9_coh4_features_all_long_year""" 
     else:
         q_cohort = """SELECT * FROM triageTD.1_5_cohort_final"""
-        q_features = """SELECT * FROM triageTD.2_9_features_all_long_year""" 
+        q_features = """SELECT * FROM triageTD.2_9_coh5_features_all_long_year""" 
 
 #     anon_id, pat_enc_csn_id_coded, admit_time, first_label, death_24hr_recent_label, death_24hr_max_label
 
