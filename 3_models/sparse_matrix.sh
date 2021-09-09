@@ -12,8 +12,9 @@
 which python
 
 # check the print out size 43980 vs. 41366 
-cohort=1_4_cohort
-# cohort=1_5_cohort_final # or default
+
+# cohort=1_4_cohort
+cohort=1_5_cohort_final # or default
 echo $cohort
 
 out_path=/home/jupyter/ThickDesc/OutputTD/3_models/

@@ -11,8 +11,8 @@ model=lightgbm
 # cohort=1_4_cohort
 cohort=1_5_cohort_final
 # label=first_label # isn't this the default?
-label=death_24hr_recent_label
 # label=death_24hr_max_label
+label=death_24hr_recent_label
 
 # val_flag=1
 val_flag=0
