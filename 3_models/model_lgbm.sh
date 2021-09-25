@@ -8,13 +8,16 @@
 #SBATCH -p normal
 
 model=lightgbm
-# cohort=1_4_cohort
-cohort=1_5_cohort_final
-# label=first_label # isn't this the default?
-# label=death_24hr_max_label
-label=death_24hr_recent_label
 
-# val_flag=1
+cohort=1_4_cohort_24hrpreadmit
+# cohort=1_4_cohort
+# cohort=1_5_cohort_final
+
+label=first_label # isn't this the default?
+# label=death_24hr_max_label
+# label=death_24hr_recent_label
+
+# val_flag=1 #run this before val_flag=0, run the training to get hyperparameters first
 val_flag=0
 
 echo $model
