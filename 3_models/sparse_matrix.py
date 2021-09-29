@@ -28,7 +28,10 @@ def main():
     ### make queries, use appropriate cohort: 1_4_cohort or 1_5_cohort_final
     if args.cohort == "1_4_cohort":
         q_cohort = """SELECT * FROM triageTD.1_4_cohort"""
-        q_features = """SELECT * FROM triageTD.2_9_coh4_features_all_long_year""" 
+        q_features = """SELECT * FROM triageTD.2_9_coh4_features_all_long_year"""
+    elif args.cohort == "1_4_cohort_24hrpreadmit": # updated with labs vitals within 24hr prior to  admit_time
+        q_cohort = """SELECT * FROM triageTD.1_4_cohort"""
+        q_features = """SELECT * FROM triageTD.2_9_coh4_24hrpreadmit_features_all_long_year""" 
     else:
         q_cohort = """SELECT * FROM triageTD.1_5_cohort_final"""
         q_features = """SELECT * FROM triageTD.2_9_coh5_features_all_long_year""" 
