@@ -70,7 +70,7 @@ def main():
                                   (df_cohort['admit_time'].dt.year == 2020) & (df_cohort['admit_time'].dt.month < 4)] # old data 2019 - 03/2020
 
     train_and_val_labels = df_cohort[(df_cohort['admit_time'].dt.year < 2020) | 
-                                     (df_cohort['admit_time'].dt.year == 2020) & (df['admit_time'].dt.month < 4)] # all old data
+                                     (df_cohort['admit_time'].dt.year == 2020) & (df_cohort['admit_time'].dt.month < 4)] # all old data
     test_labels = df_cohort[(df_cohort['admit_time'].dt.year == 2020) & (df_cohort['admit_time'].dt.month > 3) |
                             (df_cohort['admit_time'].dt.year == 2021)] # new data has 04/2020 -2021
     

@@ -9,34 +9,33 @@
 
 model=lightgbm
 
-cohort=1_4_cohort_24hrpreadmit
-# cohort=1_4_cohort
-# cohort=1_5_cohort_final
+cohort=6_7_cohort4_all
 
-label=first_label # isn't this the default?
-# label=death_24hr_max_label
-# label=death_24hr_recent_label
-
-# val_flag=1 #run this before val_flag=0, run the training to get hyperparameters first
-val_flag=0
+# label=first_label # isn't this the default?
+label=death_24hr_recent_label
 
 echo $model
 echo $cohort
 echo $label
 echo $val_flag
 
-in_path=/home/jupyter/ThickDesc/OutputTD/3_models/$cohort/
-out_path=/home/jupyter/ThickDesc/OutputTD/3_models/$cohort/${label}/
-model_path=/home/jupyter/ThickDesc/OutputTD/3_models/$cohort/${label}/${model}_validation_params.json
+in_path=/home/jupyter/ThickDesc/OutputTD/6_validation/models/$cohort/
+out_path=/home/jupyter/ThickDesc/OutputTD/6_validation/models/$cohort/${label}/
+model_path=/home/jupyter/ThickDesc/OutputTD/6_validation/models/$cohort/${label}/${model}_validation_params.json
 
 mkdir -p $out_path
 
-python /home/jupyter/ThickDesc/TriageTD/3_models/model_lgbm.py --model_class $model --data_dir $in_path  --label $label --output_dir $out_path --val $val_flag --model_file ${model_path}
+# val_flag=1 #run this before val_flag=0, run the training to get hyperparameters first
+# val_flag=1
 
+# run this after val_flag=1, prediction model with chosen hyperparameters
+# val_flag=0
 
+# python /home/jupyter/ThickDesc/TriageTD/6_validation/6.14_model_lgbm.py --model_class $model --data_dir $in_path  --label $label --output_dir $out_path --val $val_flag --model_file ${model_path}
+
+# OR
 # use val 1 for TRUE, run the training to get hyperparameters first
+python /home/jupyter/ThickDesc/TriageTD/6_validation/6.14_model_lgbm.py --model_class $model --data_dir $in_path  --label $label --output_dir $out_path --val 1 --model_file ${model_path}
+
 # use val 0 for FALSE, run the prediction model with chosen hyperparameters
-
-# python /home/jupyter/ThickDesc/TriageTD/3_models/model_lgbm.py --model_class $model --data_dir $in_path  --label $label --output_dir $out_path --val 0 --model_file ${model_path}
-
-# python /home/jupyter/ThickDesc/TriageTD/3_models/model_lgbm.py --model_class $model --data_dir $in_path  --label $label --output_dir $out_path --val 1 --model_file ${model_path}
+python /home/jupyter/ThickDesc/TriageTD/6_validation/6.14_model_lgbm.py --model_class $model --data_dir $in_path  --label $label --output_dir $out_path --val 0 --model_file ${model_path}
