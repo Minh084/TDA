@@ -66,12 +66,10 @@ def main():
 #                             (df_cohort['admit_time'].dt.year == 2021)] # new data has 04/2020 -2021
     
     # NEW data, use 2020 as val and 2021 as test
-    train_labels = df_cohort[df_cohort['admit_time'].dt.year < 2019] # 2015 - 2018, old data
-    validation_labels = df_cohort[(df_cohort['admit_time'].dt.year == 2019) | 
-                                  (df_cohort['admit_time'].dt.year == 2020)] # old data 2019 - 03/2020
+    train_labels = df_cohort[df_cohort['admit_time'].dt.year < 2020] # 2015 - 2018, old data
+    validation_labels = df_cohort[(df_cohort['admit_time'].dt.year == 2020)] # old data 2019 - 03/2020
 
-    train_and_val_labels = df_cohort[(df_cohort['admit_time'].dt.year < 2020) | 
-                                     (df_cohort['admit_time'].dt.year == 2020)] # all old data
+    train_and_val_labels = df_cohort[(df_cohort['admit_time'].dt.year < 2021)] # all old data
     test_labels = df_cohort[(df_cohort['admit_time'].dt.year == 2021)] # new data has 04/2020 -2021
     
     ## continue
@@ -93,14 +91,21 @@ def main():
 #     test_examples = df_features_test[df_features_test['year'] >= 2019]
     
     ## NEW
-    training_examples = df_features_val[df_features_val['year'] < 2019] # 2015 - 2018, old data
-    validation_examples = df_features_val[(df_features_val['year'] == 2019) | 
-                                          (df_features_val['year'] == 2020) & (df_features_val['admit_time'].dt.month < 4)] # old data 2019 - 03/2020
+#     training_examples = df_features_val[df_features_val['year'] < 2019] # 2015 - 2018, old data
+#     validation_examples = df_features_val[(df_features_val['year'] == 2019) | 
+#                                           (df_features_val['year'] == 2020) & (df_features_val['admit_time'].dt.month < 4)] # old data 2019 - 03/2020
 
-    training_and_val_examples = df_features_test[(df_features_test['year'] < 2020) | 
-                                     (df_features_test['year'] == 2020) & (df_features_test['admit_time'].dt.month < 4)] # all old data
-    test_examples = df_features_test[(df_features_test['year'] == 2020) & (df_features_test['admit_time'].dt.month > 3) |
-                                     (df_features_test['year'] == 2021)] # new data has 04/2020 -2021
+#     training_and_val_examples = df_features_test[(df_features_test['year'] < 2020) | 
+#                                      (df_features_test['year'] == 2020) & (df_features_test['admit_time'].dt.month < 4)] # all old data
+#     test_examples = df_features_test[(df_features_test['year'] == 2020) & (df_features_test['admit_time'].dt.month > 3) |
+#                                      (df_features_test['year'] == 2021)] # new data has 04/2020 -2021
+    
+    # new shc2021
+    training_examples = df_features_val[df_features_val['year'] < 2020] # 2015 - 2018, old data
+    validation_examples = df_features_val[(df_features_val['year'] == 2020)] # old data 2019 - 03/2020
+
+    training_and_val_examples = df_features_test[(df_features_test['year'] < 2021)] # all old data
+    test_examples = df_features_test[(df_features_test['year'] == 2021)] # new data has 04/2020 -2021
     
     ## continue 
     ### Create sparse matrix representations

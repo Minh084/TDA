@@ -37,7 +37,7 @@ mkdir -p $out_path
 
 # OR
 # use val 1 for TRUE, run the training to get hyperparameters first
-python /home/jupyter/ThickDesc/TriageTD/6_validation/17_model_lgbm.py --model_class $model --data_dir $in_path  --label $label --output_dir $out_path --val 1 --model_file ${model_path}
+python /home/jupyter/ThickDesc/TriageTD/shc2021/17_model_lgbm.py --model_class $model --data_dir $in_path  --label $label --output_dir $out_path --val 1 --model_file ${model_path}
 
 # use val 0 for FALSE, run the prediction model with chosen hyperparameters
-python /home/jupyter/ThickDesc/TriageTD/6_validation/17_model_lgbm.py --model_class $model --data_dir $in_path  --label $label --output_dir $out_path --val 0 --model_file ${model_path}
+python /home/jupyter/ThickDesc/TriageTD/shc2021/17_model_lgbm.py --model_class $model --data_dir $in_path  --label $label --output_dir $out_path --val 0 --model_file ${model_path}

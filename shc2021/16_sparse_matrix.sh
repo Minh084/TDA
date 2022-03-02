@@ -2,7 +2,7 @@
 # NOTE the -l flag!
 #
 #SBATCH -J get_sparse
-#SBATCH -o /home/jupyter/ThickDesc/OutputTD/3_models/logs/get_sparse."%j".out
+#SBATCH -o /home/jupyter/ThickDesc/OutputTD/shc2021/logs/get_sparse."%j".out
 
 # Request 24 hour run time
 #SBATCH -t 24:0:0
