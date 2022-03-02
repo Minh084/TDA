@@ -26,23 +26,14 @@ def main():
     os.makedirs(out_path, exist_ok=True)
 
     ### make queries, use appropriate cohort: 
-    if args.cohort == "1_4_cohort":
-        q_cohort = """SELECT * FROM triageTD.1_4_cohort"""
-        q_features = """SELECT * FROM triageTD.2_9_coh4_features_all_long_year"""
+    if args.cohort == "14_cohort_final":
+        q_cohort = """SELECT * FROM triageTD.14_cohort_final"""
+        q_features = """SELECT * FROM triageTD.14_coh_all_features_all_long_year"""
 #     elif args.cohort == "1_4_cohort_24hrpreadmit": # updated with labs vitals within 24hr prior to  admit_time
 #         q_cohort = """SELECT * FROM triageTD.1_4_cohort"""
 #         q_features = """SELECT * FROM triageTD.2_9_coh4_24hrpreadmit_features_all_long_year""" 
     else:
-        q_cohort = """SELECT * FROM triageTD.6_7_cohort4_all"""
-        q_features = """SELECT * FROM triageTD.6_11_coh4_all_features_all_long_year""" 
-
-#     anon_id, pat_enc_csn_id_coded, admit_time, first_label, death_24hr_recent_label, death_24hr_max_label
-
-#     q_features = """
-#     SELECT f.* FROM triageTD.2_9_coh4_features_all_long_year f
-#     RIGHT JOIN triageTD.1_4_cohort c
-#     USING (pat_enc_csn_id_coded)
-#     """ 
+        print("use 14_cohort_final only")
 
     ### query to dataframes
     query_job = client.query(q_cohort)
@@ -64,15 +55,24 @@ def main():
 #     train_and_val_labels = df_cohort[df_cohort['admit_time'].dt.year < 2019]
 #     test_labels = df_cohort[df_cohort['admit_time'].dt.year >= 2019] 
 
-    ## NEW
+#     ## NEW
+#     train_labels = df_cohort[df_cohort['admit_time'].dt.year < 2019] # 2015 - 2018, old data
+#     validation_labels = df_cohort[(df_cohort['admit_time'].dt.year == 2019) | 
+#                                   (df_cohort['admit_time'].dt.year == 2020) & (df_cohort['admit_time'].dt.month < 4)] # old data 2019 - 03/2020
+
+#     train_and_val_labels = df_cohort[(df_cohort['admit_time'].dt.year < 2020) | 
+#                                      (df_cohort['admit_time'].dt.year == 2020) & (df['admit_time'].dt.month < 4)] # all old data
+#     test_labels = df_cohort[(df_cohort['admit_time'].dt.year == 2020) & (df_cohort['admit_time'].dt.month > 3) |
+#                             (df_cohort['admit_time'].dt.year == 2021)] # new data has 04/2020 -2021
+    
+    # NEW data, use 2020 as val and 2021 as test
     train_labels = df_cohort[df_cohort['admit_time'].dt.year < 2019] # 2015 - 2018, old data
     validation_labels = df_cohort[(df_cohort['admit_time'].dt.year == 2019) | 
-                                  (df_cohort['admit_time'].dt.year == 2020) & (df_cohort['admit_time'].dt.month < 4)] # old data 2019 - 03/2020
+                                  (df_cohort['admit_time'].dt.year == 2020)] # old data 2019 - 03/2020
 
     train_and_val_labels = df_cohort[(df_cohort['admit_time'].dt.year < 2020) | 
-                                     (df_cohort['admit_time'].dt.year == 2020) & (df['admit_time'].dt.month < 4)] # all old data
-    test_labels = df_cohort[(df_cohort['admit_time'].dt.year == 2020) & (df_cohort['admit_time'].dt.month > 3) |
-                            (df_cohort['admit_time'].dt.year == 2021)] # new data has 04/2020 -2021
+                                     (df_cohort['admit_time'].dt.year == 2020)] # all old data
+    test_labels = df_cohort[(df_cohort['admit_time'].dt.year == 2021)] # new data has 04/2020 -2021
     
     ## continue
     train_labels.to_csv(os.path.join(out_path, 'training_labels.csv'), index=None)

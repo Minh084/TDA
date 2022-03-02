@@ -152,7 +152,7 @@ def main():
     parser.add_argument('--model_class', default=None, type=str, help='ridge/lasso/lightgbm/random_forest/ffnn')
 #     parser.add_argument('--feature_types', default='all', type=str, help='Types of features used in model. Options: all,Diagnosis,Imaging,Lab,Meds,Procedures,demo,labs_results_train, vitals_train')
     parser.add_argument('--data_dir', default="", type=str, help='directory with sparce matrices train val test')
-    parser.add_argument('--label', default="first_label", type=str, help='the column name for label in cohort')
+    parser.add_argument('--label', default="death_3hr_recent_label", type=str, help='the column name for label in cohort')
     parser.add_argument('--output_dir', default="", type=str, help='directory to save outputs')
     parser.add_argument('--val', default=True, type=str2bool, help='True if performing validation (i.e. not using test data)')
     parser.add_argument('--model_file', default = "", type=str, help = "JSON file of validated model hyperparameters")

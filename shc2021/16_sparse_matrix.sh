@@ -13,13 +13,11 @@ which python
 
 # check the print out size 43980 vs. 41366 
 
-cohort=1_4_cohort_24hrpreadmit
-# cohort=1_4_cohort
-# cohort=1_5_cohort_final # or default
+cohort=14_cohort_final
 echo $cohort
 
-out_path=/home/jupyter/ThickDesc/OutputTD/3_models/
+out_path=/home/jupyter/ThickDesc/OutputTD/shc2021/models
 
 mkdir -p $out_path
 
-python /home/jupyter/ThickDesc/TriageTD/3_models/sparse_matrix.py --output_path $out_path --cohort $cohort
+python /home/jupyter/ThickDesc/TriageTD/shc2021/15_sparse_matrix.py --output_path $out_path --cohort $cohort
