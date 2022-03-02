@@ -23,9 +23,9 @@ echo $cohort
 echo $label
 echo $val_flag
 
-in_path=/home/jupyter/ThickDesc/OutputTD/shc2021/models/$cohort/
-out_path=/home/jupyter/ThickDesc/OutputTD/shc2021/models/$cohort/${label}/
-model_path=/home/jupyter/ThickDesc/OutputTD/shc2021/models/$cohort/${label}/${model}_validation_params.json
+in_path=/home/jupyter/ThickDesc/OutputTD/shc2021/models2/$cohort/
+out_path=/home/jupyter/ThickDesc/OutputTD/shc2021/models2/$cohort/${label}/
+model_path=/home/jupyter/ThickDesc/OutputTD/shc2021/models2/$cohort/${label}/${model}_validation_params.json
 
 mkdir -p $out_path
 
