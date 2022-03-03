@@ -11,10 +11,10 @@ model=lightgbm
 
 cohort=14_cohort_final
 
-# label=first_label
+label=first_label
 # label=death_3hr_recent_label
 # label=death_6hr_recent_label
-label=death_9hr_recent_label
+# label=death_9hr_recent_label
 # label=death_12hr_recent_label
 # label=death_24hr_recent_label
 
