@@ -33,7 +33,8 @@ def main():
 #         q_cohort = """SELECT * FROM triageTD.1_4_cohort"""
 #         q_features = """SELECT * FROM triageTD.2_9_coh4_24hrpreadmit_features_all_long_year""" 
     else:
-        print("use 14_cohort_final only")
+        q_cohort = """SELECT * FROM triageTD.14_cohort_noOR_final"""
+        q_features = """SELECT * FROM triageTD.14_coh_noOR_all_features_all_long_year"""
 
     ### query to dataframes
     query_job = client.query(q_cohort)

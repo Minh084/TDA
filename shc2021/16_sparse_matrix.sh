@@ -13,7 +13,8 @@ which python
 
 # check the print out size 43980 vs. 41366 
 
-cohort=14_cohort_final
+# cohort=14_cohort_final
+cohort=14_cohort_noOR_final
 echo $cohort
 
 out_path=/home/jupyter/ThickDesc/OutputTD/shc2021/models
