@@ -1,2 +1,2 @@
-# TriageTD
-Thick Description project on ED Triage risk prediction
+# TDA 
+Thick Data Analytics
